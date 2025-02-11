@@ -5,15 +5,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { eachDayOfInterval, format, startOfMonth, endOfMonth } from "date-fns";
-import { Modal, Button, Form, Navbar } from "react-bootstrap";
-import { FaEdit, FaPalette, FaTimes, FaPlus, FaCalendarAlt } from "react-icons/fa";
+import { Button, Form, Navbar } from "react-bootstrap";
+import { FaPalette, FaTimes, FaPlus } from "react-icons/fa";
 import { SketchPicker } from "react-color";
 import { CSVLink } from "react-csv";
 import Transaction from "./Transaction";
 import Day from "./Day";
 import { generateCSVData, importCSVData } from "./csvUtils";
-
-const ItemTypes = { TRANSACTION: "transaction" };
 
 export default function BudgetApp() {
   const [transactions, setTransactions] = useState(() => {
