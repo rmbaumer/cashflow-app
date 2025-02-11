@@ -11,6 +11,7 @@ import { SketchPicker } from "react-color";
 import { CSVLink } from "react-csv";
 import Transaction from "./Transaction";
 import Day from "./Day";
+import { generateCSVData, importCSVData } from "./csvUtils";
 
 const ItemTypes = { TRANSACTION: "transaction" };
 
@@ -109,38 +110,20 @@ export default function BudgetApp() {
     setShowAddTransactionForm(false);
   };
 
-  const generateCSVData = () => {
-    const csvData = [];
-    let runningBalance = openingBalance;
-
-    // Add start date row
-    csvData.push({
-      Date: format(startDate, "MMM d"),
-      Transaction: "",
-      Amount: "",
-      Balance: runningBalance,
-    });
-
-    // Add transactions
-    transactions.forEach((transaction) => {
-      runningBalance += transaction.amount;
-      csvData.push({
-        Date: transaction.date,
-        Transaction: transaction.name,
-        Amount: transaction.amount,
-        Balance: runningBalance,
-      });
-    });
-
-    // Add end date row
-    csvData.push({
-      Date: format(endDate, "MMM d"),
-      Transaction: "",
-      Amount: "",
-      Balance: runningBalance,
-    });
-
-    return csvData;
+  const handleImportCSV = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const csvString = e.target.result;
+        const { transactions, openingBalance, startDate, endDate } = importCSVData(csvString);
+        setTransactions(transactions);
+        setOpeningBalance(openingBalance);
+        setStartDate(startDate);
+        setEndDate(endDate);
+      };
+      reader.readAsText(file);
+    }
   };
 
   const days = eachDayOfInterval({ start: startDate, end: endDate });
@@ -189,7 +172,7 @@ export default function BudgetApp() {
             }}
           />
           <CSVLink
-            data={generateCSVData()}
+            data={generateCSVData(transactions, openingBalance, startDate, endDate)}
             headers={[
               { label: "Date", key: "Date" },
               { label: "Transaction", key: "Transaction" },
@@ -202,6 +185,7 @@ export default function BudgetApp() {
             Export to CSV
           </CSVLink>
           <Button variant="outline-danger" size="sm" onClick={resetApp}>Reset</Button>
+		  <Form.Control type="file" size="sm" className="btn btn-outline-primary btn-sm w-25" accept=".csv" onChange={handleImportCSV} />
         </div>
         <div className="mb-4 d-flex gap-3 align-items-center">
           <label className="me-2">Opening Balance:</label>
