@@ -74,6 +74,12 @@ export default function BudgetApp() {
     setTransactions((prev) => prev.filter((t) => t !== transactionToRemove));
   };
 
+  const updateTransaction = (originalTransaction, updatedTransaction) => {
+    setTransactions((prev) =>
+      prev.map((t) => (t === originalTransaction ? { ...t, ...updatedTransaction } : t))
+    );
+  };
+
   const calculateClosingBalance = () => {
     return transactions.reduce((acc, t) => acc + t.amount, openingBalance);
   };
@@ -277,6 +283,7 @@ export default function BudgetApp() {
                     transactions={transactions.filter((t) => t.date === format(day, "MMM d"))}
                     addTransaction={addTransaction}
                     removeTransactionFromDate={removeTransactionFromDate}
+                    updateTransaction={updateTransaction} // Pass updateTransaction to Day component
                   />
                 )}
               </div>
