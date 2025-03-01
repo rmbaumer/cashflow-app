@@ -1,4 +1,4 @@
 /* Ensure calendar dropdowns appear above the sticky-top navbar */
 .react-datepicker-popper {
-  z-index: 9999; /* Bootstrap's sticky-top navbar has z-index 1030 */
+  z-index: 9999;
 }
