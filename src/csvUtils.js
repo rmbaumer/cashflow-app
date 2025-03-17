@@ -13,6 +13,9 @@ export const generateCSVData = (transactions, openingBalance, startDate, endDate
     Balance: runningBalance,
   });
 
+  // Sort transactions by date
+  transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+
   // Add transactions
   transactions.forEach((transaction) => {
     runningBalance += transaction.amount;
